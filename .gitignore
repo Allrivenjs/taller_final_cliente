@@ -1,0 +1,7 @@
+.gitignore
+!.gitignore
+.env
+composer.lock
+/vendor/
+.idea/
+*.xml
