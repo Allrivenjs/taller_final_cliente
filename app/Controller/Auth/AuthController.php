@@ -9,16 +9,15 @@ use Firebase\JWT\ExpiredException;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Illuminate\Http\Request;
-use mysqli_sql_exception;
 
 class AuthController extends Controller
 {
 
     /**
-     * @return void
+     * @return \Config\Providers\Response
      * @throws Exception
      */
-    public function SignOut(): void
+    public function SignOut(): \Config\Providers\Response
     {
         $request = Request::capture();
         $validate = $request->validate([
@@ -33,7 +32,7 @@ class AuthController extends Controller
         $data_in_token = $request->only("username");
         $token = JWT::encode($this->GenerateToken($data_in_token), getenv('JWT_SECRET'), 'HS256');//Generate token
 
-        echo json_encode([
+        return $this->response([
             'token' => $token,
             'user' => $user,
         ]);
@@ -47,35 +46,24 @@ class AuthController extends Controller
     public function Login(): void
     {
         $request = Request::capture();
-        $ConDB = Database::getInstance()->getConnection(); //Conection to Database
-        $username = mysqli_real_escape_string($ConDB,$request->post("user_name"));
-        $password = mysqli_real_escape_string($ConDB,sha1($request->post("password")));
-        /*
-         * querying user data
-         * */
-
-        $query_user = sprintf("SELECT uc.idRole, user.* FROM user INNER JOIN usercredentials uc on user.idUserCredentials=uc.id WHERE uc.user = '%s' AND uc.password = '%s';",$username, $password);
-        echo"$query_user";
-        $stmt_user = mysqli_query($ConDB, $query_user);
-        $user_row = $stmt_user->fetch_assoc();
-        if (mysqli_num_rows($stmt_user) == 1) {
-
-            $data_in_token = array(
-                "user_name" => $username,
-                "rol" => $user_row['idRole'],
-            );
-
-            $token = JWT::encode($this->GenerateToken($data_in_token), getenv('JWT_SECRET'), 'HS256');//Generate token
-            http_response_code(300);
-            $output = array('token' => $token, 'user_data' => $user_row);
-            print(json_encode($output));
-            return;
+        $validate = $request->validate([
+            'username' => 'required|string',
+            'password' => 'required|string',
+        ]);
+        list($username, $password) = $validate;
+        $user = usuarios::query()->where('username', $username)->where('password', $password)->firstOrFail();
+        if (is_null($user)) {
+            throw new Exception("Usuario o contraseña incorrectos",403);
         }
+        $data_in_token = array(
+            "user_name" => $username,
+            "rol" => $user->tipo_id,
+        );
 
-        //if it did not find the user, then it exits the upper conditional and prints the following message
-        http_response_code(403);
-        print(json_encode(array('detail' => 'Credenciales incorrectas o invalidas, por favor intente nuevamente')));
-
+        $token = JWT::encode($this->GenerateToken($data_in_token), getenv('JWT_SECRET'), 'HS256');//Generate token
+        $this->response([
+            'token' => $token, 'user' => $user
+        ]);
     }
 
     /**
@@ -109,11 +97,46 @@ class AuthController extends Controller
             $now = time();
             //check that it is not expired
             if ($now < $tokenDecode->exp) {
-                Database::getInstance()->SetUserConnection($tokenDecode->data->rol);
                 return true;
             }
         }
-
         return false;
+    }
+
+    //Restablecer contraseña
+
+    public function verifyReset(){
+        $request = Request::capture();
+        $validate = $request->validate([
+            'username' => 'required|string',
+        ]);
+        $user = usuarios::query()->where('username', $validate['username'])->first();
+        if (is_null($user)) {
+            throw new Exception("Usuario no encontrado",403);
+        }
+        $this->response([
+            'user' => $user
+        ]);
+
+    }
+
+
+    /**
+     * @throws Exception
+     */
+    public function ResetPassword():void{
+        $request = Request::capture();
+        $validate = $request->validate([
+            'username' => 'required|string',
+            'password' => 'required|string',
+        ]);
+        list($username, $password) = $validate;
+        $user = usuarios::query()->where('username', $username)->first();
+        if (is_null($user)) throw new Exception("Usuario incorrectos",403);
+        $user->password = password_hash($password, PASSWORD_DEFAULT);
+        $user->save();
+        $this->response([
+            'user' => $user
+        ]);
     }
 }

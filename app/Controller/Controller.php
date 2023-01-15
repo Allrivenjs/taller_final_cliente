@@ -2,12 +2,21 @@
 
 namespace App\Controller;
 
+use Config\Providers\Response;
 
-
-
-use Sirius\Validation\Validator;
-
-class Controller
+class Controller extends Response
 {
-    //code here...
+    public final function response($content = ''): static
+    {
+        (new Response())->responseContent($content)->send();
+        return $this;
+    }
+
+
+    public function hello(): Response
+    {
+        return $this->response([
+            'message' => 'Hello World',
+        ]);
+    }
 }
