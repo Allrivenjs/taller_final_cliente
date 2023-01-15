@@ -9,6 +9,9 @@ use Firebase\JWT\ExpiredException;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Hash;
+use Sirius\Validation\Validator;
 
 class AuthController extends Controller
 {
@@ -20,16 +23,32 @@ class AuthController extends Controller
     public function SignOut(): \Config\Providers\Response
     {
         $request = Request::capture();
-        $validate = $request->validate([
-            'nombre' => 'required|string',
-            'apellido' => 'required|string',
-            'username' => 'required|string|unique:usuarios,username',
-            'password' => 'required|string',
-        ]);
-        $validate['password'] = password_hash($validate['password'], PASSWORD_DEFAULT);
+        $validator = new Validator();
+        $validator->add('nombres', 'required');
+        $validator->add('apellidos', 'required');
+        $validator->add('username', 'required');
+        $validator->add('password', 'required');
+        if (!$validator->validate($request->all())) {
+            $validator->addMessage('username', 'El usuario es requerido');
+            $validator->addMessage('password', 'La contraseña es requerida');
+            $validator->addMessage('nombres', 'El nombre es requerido');
+            $validator->addMessage('apellidos', 'El apellido es requerido');
+            return $this->response([
+                'message' => 'Error en los datos',
+                'errors' => $validator->getMessages()
+            ], 400);
+        }
+        $validate = Arr::only($request->all(), ['username', 'password', 'nombres', 'apellidos']);
+        $user = usuarios::query()->where('username', $validate['username'])->first();
+        if (!is_null($user)) return $this->response([
+            'message' => 'El usename ya existe'
+        ], 400);
+        $validate['password'] = sha1($validate['password']);
         $validate['tipo_id'] = 0;
         $user = usuarios::query()->create($validate);
-        $data_in_token = $request->only("username");
+        $data_in_token = [
+            'user_id' => $user->id,
+        ];
         $token = JWT::encode($this->GenerateToken($data_in_token), getenv('JWT_SECRET'), 'HS256');//Generate token
 
         return $this->response([
@@ -40,28 +59,34 @@ class AuthController extends Controller
     }
 
     /**
-     * @throws Exception
-     * @return void
+     * @return AuthController
+     *@throws Exception
      */
-    public function Login(): void
+    public function Login(): AuthController
     {
         $request = Request::capture();
-        $validate = $request->validate([
-            'username' => 'required|string',
-            'password' => 'required|string',
-        ]);
-        list($username, $password) = $validate;
-        $user = usuarios::query()->where('username', $username)->where('password', $password)->firstOrFail();
-        if (is_null($user)) {
-            throw new Exception("Usuario o contraseña incorrectos",403);
+        $validator = new Validator();
+        $validator->add('username', 'required');
+        $validator->add('password', 'required');
+        if (!$validator->validate($request->all())) {
+            $validator->addMessage('username', 'El usuario es requerido');
+            $validator->addMessage('password', 'La contraseña es requerida');
+           return $this->response([
+                'message' => 'Error en los datos',
+                'errors' => $validator->getMessages()
+            ], 400);
         }
-        $data_in_token = array(
-            "user_name" => $username,
-            "rol" => $user->tipo_id,
-        );
+        $validate = Arr::only($request->all(), ['username', 'password']);
+        $user = usuarios::query()->where('username', $validate['username'])->where('password', sha1($validate['password']))->first();
+        if (is_null($user)) return $this->response([
+            'message' => 'Usuario o contraseña incorrectos',
+        ], 400);
 
+        $data_in_token = [
+            'user_id'=>$user->id,
+        ];
         $token = JWT::encode($this->GenerateToken($data_in_token), getenv('JWT_SECRET'), 'HS256');//Generate token
-        $this->response([
+        return $this->response([
             'token' => $token, 'user' => $user
         ]);
     }
@@ -133,7 +158,7 @@ class AuthController extends Controller
         list($username, $password) = $validate;
         $user = usuarios::query()->where('username', $username)->first();
         if (is_null($user)) throw new Exception("Usuario incorrectos",403);
-        $user->password = password_hash($password, PASSWORD_DEFAULT);
+        $user->password = Hash::make($password);
         $user->save();
         $this->response([
             'user' => $user

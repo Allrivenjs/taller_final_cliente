@@ -24,7 +24,13 @@ class Response
     public function sendJson(): static
     {
         header('Content-Type: application/json');
-        echo json_encode($this->content, JSON_FORCE_OBJECT);
+        echo json_encode($this->content, JSON_UNESCAPED_UNICODE | JSON_FORCE_OBJECT);
+        return $this;
+    }
+
+    public function setStatusCode(int $statusCode): static
+    {
+        http_response_code($statusCode);
         return $this;
     }
 

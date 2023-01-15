@@ -17,6 +17,12 @@ $router = Config\Providers\RouteServiceProviders::getInstance()->getRouter();
 
       $router->group(['before' => 'auth'], function(RouteCollector $router){
 
+          $router->get('/actas', [App\Controller\Actas\ActasController::class, 'index']);
+          $router->post('/actas', [App\Controller\Actas\ActasController::class, 'store']);
+          $router->get('/actas/{id}', [App\Controller\Actas\ActasController::class, 'show']);
+          $router->put('/actas/{id}', [App\Controller\Actas\ActasController::class, 'update']);
+          $router->delete('/actas/{id}', [App\Controller\Actas\ActasController::class, 'destroy']);
+
           $router->get('/posts', function () {
               echo 'posts';
           });

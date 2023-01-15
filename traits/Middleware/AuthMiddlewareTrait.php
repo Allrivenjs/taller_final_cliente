@@ -2,10 +2,9 @@
 
 namespace Traits\Middleware;
 
-use App\Model\Controller\Auth\AuthController;
+use App\Controller\Auth\AuthController;
 use Exception;
 use Firebase\JWT\ExpiredException;
-use Firebase\JWT\JWT;
 
 class AuthMiddlewareTrait
 {
