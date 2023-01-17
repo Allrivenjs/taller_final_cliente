@@ -20,12 +20,25 @@ class actas extends Model
         'creador_id'
     ];
 
-    public function responsable(){
+    public function responsable(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
         return $this->belongsTo(usuarios::class, 'responsable_id');
     }
 
-    public function creador(){
+    public function creador(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
         return $this->belongsTo(usuarios::class, 'creador_id');
+    }
+
+    public function asistentes(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(usuarios::class, 'asistentes', 'acta_id', 'asistente_id');
+    }
+
+    public function compromisos(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(usuarios::class, 'compromisos', 'acta_id', 'responsable_id')
+            ->withPivot('descripcion', 'fecha_inicio', 'fecha_final');
     }
 
 }
