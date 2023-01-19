@@ -34,15 +34,20 @@ class Controller extends Response
         ]);
     }
 
-    public function getUserByToken(): usuarios | null
+    public function getUserByToken(): \Illuminate\Database\Eloquent\Builder|array|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|null
     {
         $token = $this->request->bearerToken();
         if (is_null($token)) {
             return null;
         }
         $user = JWT::decode($token, new Key(getenv('JWT_SECRET'), 'HS256'))->data;
-        dd($user);
         return usuarios::query()->find($user->user_id);
+    }
+
+
+    public function getUsers(): Response
+    {
+        return $this->response(usuarios::query()->get());
     }
 
 }

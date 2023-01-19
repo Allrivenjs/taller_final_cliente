@@ -4,6 +4,7 @@
 use App\Controller\Auth\AuthController;
 use App\Controller\Controller;
 use Phroute\Phroute\RouteCollector;
+use App\Controller\Actas\ActasController;
 
 $router = Config\Providers\RouteServiceProviders::getInstance()->getRouter();
 
@@ -17,11 +18,15 @@ $router = Config\Providers\RouteServiceProviders::getInstance()->getRouter();
 
       $router->group(['before' => 'auth'], function(RouteCollector $router){
 
-          $router->get('/actas', [App\Controller\Actas\ActasController::class, 'index']);
-          $router->post('/actas', [App\Controller\Actas\ActasController::class, 'store']);
-          $router->get('/actas/{id}', [App\Controller\Actas\ActasController::class, 'show']);
-          $router->put('/actas/{id}', [App\Controller\Actas\ActasController::class, 'update']);
-          $router->delete('/actas/{id}', [App\Controller\Actas\ActasController::class, 'destroy']);
+          $router->get('/actas', [ActasController::class, 'index']);
+          $router->post('/actas', [ActasController::class, 'store']);
+          $router->get('/actas/{id}', [ActasController::class, 'show']);
+          $router->put('/actas/{id}', [ActasController::class, 'update']);
+          $router->delete('/actas/{id}', [ActasController::class, 'destroy']);
+          $router->post('/actas/attach-asistentes', [ActasController::class, 'attachAsistentes']);
+          $router->post('/actas/make-compromisos', [ActasController::class, 'makeCompromisos']);
+
+          $router->get('/usuarios', [Controller::class, 'getUsers']);
 
           $router->get('/posts', function () {
               echo 'posts';
