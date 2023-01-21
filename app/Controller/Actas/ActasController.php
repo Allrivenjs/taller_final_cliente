@@ -80,6 +80,7 @@ class ActasController extends Controller
         if(is_null($acta)) return $this->response([
             'message' => 'El acta_id no existe'
         ], 400);
+
         $responsable = usuarios::query()->findMany($validate['responsable_id']);
         if(is_null($responsable)) return $this->response([
             'message' => 'El responsable_id no existe'
@@ -104,6 +105,8 @@ class ActasController extends Controller
         $this->validation();
         $validate = $this->request->only(['asunto', 'orden_del_dia', 'fecha_creacion', 'hora_inicio', 'hora_final', 'responsable_id', 'creador_id', 'descripcion_hechos']);
         $usuario = usuarios::query()->find($validate['creador_id']);
+        $validate['hora_final'] = Carbon::make($validate['hora_final'])->format('H:i:s');
+        $validate['hora_inicio'] = Carbon::make($validate['hora_inicio'])->format('H:i:s');
         if(is_null($usuario)) return $this->response([
             'message' => 'El creador_id no existe'
         ], 400);
