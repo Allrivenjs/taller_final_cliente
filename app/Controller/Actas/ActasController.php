@@ -5,6 +5,7 @@ namespace App\Controller\Actas;
 use App\Controller\Controller;
 use App\Model\actas;
 use App\Model\usuarios;
+use Carbon\Carbon;
 use Sirius\Validation\Validator;
 
 
@@ -24,6 +25,9 @@ class ActasController extends Controller
             'message' => 'El creador_id no existe'
         ], 400);
         $responsable = usuarios::query()->find($validate['responsable_id']);
+        //obtener la hora de hora_fial
+        $validate['hora_final'] = Carbon::make($validate['hora_final'])->format('H:i:s');
+        $validate['hora_inicio'] = Carbon::make($validate['hora_inicio'])->format('H:i:s');
         if(is_null($responsable)) return $this->response([
             'message' => 'El responsable_id no existe'
         ], 400);

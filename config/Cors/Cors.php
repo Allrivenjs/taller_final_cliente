@@ -28,6 +28,6 @@ final class Cors
 
             exit(0);
         }
-        
+
     }
 }
