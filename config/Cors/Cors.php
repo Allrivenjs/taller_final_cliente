@@ -13,6 +13,7 @@ final class Cors
             header('Access-Control-Allow-Origin: *');
             header('Content-Type: application/json');
             header('Access-Control-Allow-Credentials: true');
+            header("Access-Control-Allow-Methods: POST, GET, DELETE, PUT, PATCH, OPTIONS");
             header('Access-Control-Max-Age: 86400');    // cache for 1 day
         }
         // Access-Control headers are received during OPTIONS requests
