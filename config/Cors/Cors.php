@@ -28,7 +28,6 @@ final class Cors
 
             exit(0);
         }
-
-        echo "You have CORS!";
+        
     }
 }
