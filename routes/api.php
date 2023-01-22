@@ -26,6 +26,9 @@ $router = Config\Providers\RouteServiceProviders::getInstance()->getRouter();
           $router->post('/actas/attach-asistentes', [ActasController::class, 'attachAsistentes']);
           $router->post('/actas/make-compromisos', [ActasController::class, 'makeCompromisos']);
 
+          $router->get('find-by-id-or-asunto-actas', [ActasController::class, 'findByIdOrAsuntoActas']);
+          $router->get('actas-by-date', [ActasController::class, 'actasByDate']);
+
           $router->get('/usuarios', [Controller::class, 'getUsers']);
 
           $router->get('/posts', function () {

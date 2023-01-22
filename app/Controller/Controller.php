@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Model\actas;
 use App\Model\usuarios;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
@@ -48,6 +49,26 @@ class Controller extends Response
     public function getUsers(): Response
     {
         return $this->response(usuarios::query()->get());
+    }
+
+
+    public function findByIdOrAsuntoActas(){
+        $id = $this->request->get('id');
+        $asunto = $this->request->get('asunto');
+        if (is_null($id) && is_null($asunto)) {
+            return $this->response([
+                'message' => 'No se ha enviado el id o autoActas'
+            ], 400);
+        }
+        $actas = actas::query()->where('id', $id)->orWhere('asunto', $asunto)->first();
+        if (is_null($actas)) {
+            return $this->response([
+                'message' => 'No se ha encontrado el acta'
+            ], 404);
+        }
+        return $this->response([
+            'actas' => $actas
+        ]);
     }
 
 }
