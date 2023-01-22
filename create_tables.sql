@@ -52,4 +52,4 @@ ALTER TABLE `compromisos` ADD CONSTRAINT `compromisos_fk1` FOREIGN KEY (`respons
 
 
 
-
+INSERT INTO usuarios (nombres, apellidos, username, password, tipo_id) VALUES ('admin', 'admin', 'admin', 'admin', 1);

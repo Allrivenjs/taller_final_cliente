@@ -28,6 +28,7 @@ $router = Config\Providers\RouteServiceProviders::getInstance()->getRouter();
 
           $router->get('find-by-id-or-asunto-actas', [ActasController::class, 'findByIdOrAsuntoActas']);
           $router->get('actas-by-date', [ActasController::class, 'actasByDate']);
+          $router->get('compromisos-pendientes', [ActasController::class, 'getCompromisosPendientes']);
 
           $router->get('/usuarios', [Controller::class, 'getUsers']);
 

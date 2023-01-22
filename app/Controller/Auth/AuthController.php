@@ -44,7 +44,7 @@ class AuthController extends Controller
             'message' => 'El usename ya existe'
         ], 400);
         $validate['password'] = sha1($validate['password']);
-        $validate['tipo_id'] = 0;
+        $validate['tipo_id'] = usuarios::USER_TYPE['USER'];
         $user = usuarios::query()->create($validate);
         $data_in_token = [
             'user_id' => $user->id,

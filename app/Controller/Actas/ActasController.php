@@ -39,7 +39,7 @@ class ActasController extends Controller
     }
     public function show($id): ActasController
     {
-        return $this->response(actas::query()->find($id));
+        return $this->response(actas::query()->find($id)->load(['responsable', 'creador']));
     }
 
     public function attachAsistentes(): ActasController
@@ -167,6 +167,17 @@ class ActasController extends Controller
         return $this->response([
             'message' => 'Actas por fecha',
             'actas' => $actas
+        ]);
+    }
+
+    public function getCompromisosPendientes(){
+        $actasCompromisos = actas::query()
+            ->withWhereHas('compromisos', function ($query){
+            $query->whereBetween('fecha_final', [Carbon::now()->format('Y-m-d'), Carbon::now()->addDays(7)->format('Y-m-d')]);
+        })->get();
+        return $this->response([
+            'message' => 'Compromisos pendientes',
+            'actas' => $actasCompromisos
         ]);
     }
 }

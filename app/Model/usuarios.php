@@ -16,6 +16,10 @@ class usuarios extends Model
         'password',
         'tipo_id'
     ];
+    const USER_TYPE = [
+        'ADMIN' => 1,
+        'USER' => 0
+    ];
     protected $hidden = [
         'password'
     ];
