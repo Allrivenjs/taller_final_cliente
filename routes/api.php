@@ -21,7 +21,7 @@ $router = Config\Providers\RouteServiceProviders::getInstance()->getRouter();
           $router->get('/actas', [ActasController::class, 'index']);
           $router->post('/actas', [ActasController::class, 'store']);
           $router->get('/actas/{id}', [ActasController::class, 'show']);
-          $router->put('/actas/{id}', [ActasController::class, 'update']);
+          $router->post('/actas/update/{id}', [ActasController::class, 'update']);
           $router->post('/actas/delete/{id}', [ActasController::class, 'destroy']);
           $router->post('/actas/attach-asistentes', [ActasController::class, 'attachAsistentes']);
           $router->post('/actas/make-compromisos', [ActasController::class, 'makeCompromisos']);
