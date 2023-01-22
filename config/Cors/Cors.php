@@ -13,8 +13,8 @@ final class Cors
             // you want to allow, and if so:
             header('Access-Control-Allow-Origin: *');
             header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method");
-            header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
-            header("Allow: GET, POST, OPTIONS, PUT, DELETE");
+            header("Access-Control-Allow-Headers: content-type");
+            header("Access-Control-Allow-Methods: OPTIONS,GET,PUT,POST,DELETE");
 //            header('Access-Control-Max-Age: 86400');    // cache for 1 day
         }
 
