@@ -66,9 +66,11 @@ class Controller extends Response
                 'message' => 'No se ha encontrado el acta'
             ], 404);
         }
+
         return $this->response([
             'actas' => $actas
         ]);
     }
+
 
 }

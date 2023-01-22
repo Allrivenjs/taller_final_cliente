@@ -46,9 +46,7 @@ class ActasController extends Controller
     {
         $validator = new Validator();
         $validator->add('acta_id', 'required');
-        $validator->add('acta_id', 'integer');
         $validator->add('asistente_id', 'required');
-        $validator->add('asistente_id', 'array');
         $validate = $this->request->only(['acta_id', 'asistente_id']);
         $acta = actas::query()->find($validate['acta_id']);
         if(is_null($acta)) return $this->response([
@@ -68,7 +66,6 @@ class ActasController extends Controller
     public function makeCompromisos(){
         $validator = new Validator();
         $validator->add('acta_id', 'required');
-        $validator->add('acta_id', 'integer');
         $validator->add('responsable_id', 'required');
         $validator->add('descripcion', 'required');
         $validator->add('fecha_inicio', 'required');
