@@ -70,7 +70,6 @@ class ActasController extends Controller
         $validator->add('descripcion', 'required');
         $validator->add('fecha_inicio', 'required');
         $validator->add('fecha_final', 'required');
-        $validator->add('estado', 'required');
 
         $validate = $this->request->only(['acta_id', 'responsable_id', 'descripcion', 'fecha_inicio', 'fecha_final', 'estado']);
         $acta = actas::query()->find($validate['acta_id']);
