@@ -60,7 +60,7 @@ class Controller extends Response
                 'message' => 'No se ha enviado el id o asunto'
             ], 400);
         }
-        $actas = actas::query()->when(!empty($id), function ($query) use ($id) {
+        $actas = actas::query()->with(['responsable', 'creador'])->when(!empty($id), function ($query) use ($id) {
             return $query->where('id', $id);
         })->when(!empty($asunto), function ($query) use ($asunto) {
             return $query->where('asunto', 'like', "%$asunto%");
