@@ -66,27 +66,20 @@ class ActasController extends Controller
     public function makeCompromisos(){
         $validator = new Validator();
         $validator->add('acta_id', 'required');
-        $validator->add('responsable_id', 'required');
-        $validator->add('descripcion', 'required');
-        $validator->add('fecha_inicio', 'required');
-        $validator->add('fecha_final', 'required');
+        $validator->add('datos', 'required');
 
-        $validate = $this->request->only(['acta_id', 'responsable_id', 'descripcion', 'fecha_inicio', 'fecha_final']);
+        $validate = $this->request->only(['acta_id', 'datos']);
         $acta = actas::query()->find($validate['acta_id']);
         if(is_null($acta)) return $this->response([
             'message' => 'El acta_id no existe'
         ], 400);
 
-        $responsable = usuarios::query()->findMany($validate['responsable_id']);
+        $responsable = usuarios::query()->findMany($validate['datos'][0]['responsable_id']);
+        echo $validate['datos'];
         if(is_null($responsable)) return $this->response([
             'message' => 'El responsable_id no existe'
         ], 400);
-        $acta->compromisos()->sync([
-            'responsable_id' => $validate['responsable_id'],
-            'descripcion' => $validate['descripcion'],
-            'fecha_inicio' => $validate['fecha_inicio'],
-            'fecha_final' => $validate['fecha_final'],
-        ]);
+        $acta->compromisos()->sync($validate['datos']);
         return $this->response([
             'message' => 'Compromisos agregado',
             'acta' => $acta
