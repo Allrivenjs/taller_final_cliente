@@ -73,10 +73,7 @@ class ActasController extends Controller
         if(is_null($acta)) return $this->response([
             'message' => 'El acta_id no existe'
         ], 400);
-        echo json_encode($validate['datos']);
-        die(1);
         $responsable = usuarios::query()->findMany($validate['datos'][0]['responsable_id']);
-
         if(is_null($responsable)) return $this->response([
             'message' => 'El responsable_id no existe'
         ], 400);
