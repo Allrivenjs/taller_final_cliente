@@ -81,7 +81,8 @@ class ActasController extends Controller
         if(is_null($responsable)) return $this->response([
             'message' => 'El responsable_id no existe'
         ], 400);
-        $acta->compromisos()->sync($validate['responsable_id'], [
+        $acta->compromisos()->sync([
+            'responsable_id' => $validate['responsable_id'],
             'descripcion' => $validate['descripcion'],
             'fecha_inicio' => $validate['fecha_inicio'],
             'fecha_final' => $validate['fecha_final'],
