@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class actas extends Model
 {
     protected $table = 'actas';
-    public $timestamps = false;
+//    public $timestamps = false;
     protected $fillable = [
         'id',
         'asunto',

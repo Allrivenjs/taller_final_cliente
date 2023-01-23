@@ -18,6 +18,8 @@ CREATE TABLE `actas` (
                          `responsable_id` int NOT NULL,
                          `orden_del_dia` TEXT NOT NULL,
                          `descripcion_hechos` TEXT NOT NULL,
+                         `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                          `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                          PRIMARY KEY (`id`)
 );
 
