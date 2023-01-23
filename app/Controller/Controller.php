@@ -61,9 +61,9 @@ class Controller extends Response
             ], 400);
         }
         $actas = actas::query();
-        if (is_null($asunto))
+        if (!is_null($asunto))
             $actas->where('asunto','LIKE', "%$asunto%");
-        if (is_null($id))
+        if (!is_null($id))
             $actas->where('id','LIKE', "%$id%");
         $actas->get();
         if (is_null($actas)) {
