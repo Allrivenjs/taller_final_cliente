@@ -76,6 +76,7 @@ class ActasController extends Controller
 
         $responsable = usuarios::query()->findMany($validate['datos'][0]['responsable_id']);
         echo $validate['datos'];
+        die(1);
         if(is_null($responsable)) return $this->response([
             'message' => 'El responsable_id no existe'
         ], 400);
