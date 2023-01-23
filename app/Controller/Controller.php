@@ -62,10 +62,9 @@ class Controller extends Response
         }
         $actas = actas::query();
         if (!is_null($asunto))
-            $actas->where('asunto','LIKE', "%$asunto%");
+            $actas->where('asunto','LIKE', "%$asunto%")->get();
         if (!is_null($id))
-            $actas->where('id','LIKE', "%$id%");
-        $actas->get();
+            $actas->where('id','LIKE', "%$id%")->get();
         if (is_null($actas)) {
             return $this->response([
                 'message' => 'No se ha encontrado el acta'
