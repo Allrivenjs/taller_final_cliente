@@ -60,11 +60,13 @@ class Controller extends Response
                 'message' => 'No se ha enviado el id o asunto'
             ], 400);
         }
-        $actas = actas::query();
-        if (!is_null($asunto))
-            $actas->where('asunto','LIKE', "%$asunto%")->get();
-        if (!is_null($id))
-            $actas->where('id','LIKE', "%$id%")->get();
+//        query en actas si existe por id o por string de asunto
+        $actas = actas::query()->when(!is_null($id), function ($query) use ($id) {
+            return $query->where('id', $id);
+        })->when(!is_null($asunto), function ($query) use ($asunto) {
+            return $query->where('asunto', 'like', "%$asunto%");
+        })->get();
+
         if (is_null($actas)) {
             return $this->response([
                 'message' => 'No se ha encontrado el acta'
