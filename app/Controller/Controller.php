@@ -57,16 +57,20 @@ class Controller extends Response
         $asunto = $this->request->get('asunto');
         if (is_null($id) && is_null($asunto)) {
             return $this->response([
-                'message' => 'No se ha enviado el id o autoActas'
+                'message' => 'No se ha enviado el id o asunto'
             ], 400);
         }
-        $actas = actas::query()->where('id','LIKE', "%$id%")->orWhere('asunto','LIKE', "%$asunto%")->get();
+        $actas = actas::query();
+        if (is_null($asunto))
+            $actas->where('asunto','LIKE', "%$asunto%");
+        if (is_null($id))
+            $actas->where('id','LIKE', "%$id%");
+        $actas->get();
         if (is_null($actas)) {
             return $this->response([
                 'message' => 'No se ha encontrado el acta'
             ], 404);
         }
-
         return $this->response([
             'actas' => $actas
         ]);
