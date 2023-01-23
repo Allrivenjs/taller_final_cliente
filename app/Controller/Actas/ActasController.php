@@ -151,7 +151,7 @@ class ActasController extends Controller
     public function actasByDate(){
         $this->request->only(['fecha_inicio', 'fecha_final']);
         //validar que lleguen las fechas
-        if (!empty($this->request->get('fecha_inicio')) || !empty($this->request->get('fecha_final'))) {
+        if (empty($this->request->get('fecha_inicio')) || empty($this->request->get('fecha_final'))) {
             return $this->response([
                 'message' => 'Las fechas son requeridas'
             ], 400);
