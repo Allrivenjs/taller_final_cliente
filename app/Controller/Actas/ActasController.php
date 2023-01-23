@@ -150,8 +150,8 @@ class ActasController extends Controller
 
     public function actasByDate(){
         $this->request->only(['fecha_inicio', 'fecha_final']);
-        $fecha_inicio = Carbon::make($this->request->get('fecha_inicio'))->format('Y-m-d');
-        $fecha_final = Carbon::make($this->request->get('fecha_final'))->format('Y-m-d');
+        $fecha_inicio = Carbon::make($this->request->get('fecha_inicio'))->format('d-m-y');
+        $fecha_final = Carbon::make($this->request->get('fecha_final'))->format('d-m-y');
         $actas = actas::query()->whereBetween('fecha_creacion', [$fecha_inicio, $fecha_final])->get();
 
         return $this->response([
