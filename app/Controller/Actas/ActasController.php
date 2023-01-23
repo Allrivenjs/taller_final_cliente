@@ -74,8 +74,8 @@ class ActasController extends Controller
             'message' => 'El acta_id no existe'
         ], 400);
         $responsable = usuarios::query()->findMany($validate['datos'][0]['responsable_id']);
-        $validate['datos'][0]['fecha_inicio'] = Carbon::make($validate['datos'][0]['fecha_inicio'])->format('H:i:s');
-        $validate['datos'][0]['fecha_final'] = Carbon::make($validate['datos'][0]['fecha_final'])->format('H:i:s');
+        $validate['datos'][0]['fecha_inicio'] = Carbon::make($validate['datos'][0]['fecha_inicio']);
+        $validate['datos'][0]['fecha_final'] = Carbon::make($validate['datos'][0]['fecha_final']);
         if(is_null($responsable)) return $this->response([
             'message' => 'El responsable_id no existe'
         ], 400);
