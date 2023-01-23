@@ -55,15 +55,14 @@ class Controller extends Response
     public function findByIdOrAsuntoActas(){
         $id = $this->request->get('id');
         $asunto = $this->request->get('asunto');
-        if (is_null($id) && is_null($asunto)) {
+        if (!empty($id) && !empty($asunto)) {
             return $this->response([
                 'message' => 'No se ha enviado el id o asunto'
             ], 400);
         }
-//        query en actas si existe por id o por string de asunto
-        $actas = actas::query()->when(!is_null($id), function ($query) use ($id) {
+        $actas = actas::query()->when(!empty($id), function ($query) use ($id) {
             return $query->where('id', $id);
-        })->when(!is_null($asunto), function ($query) use ($asunto) {
+        })->when(!empty($asunto), function ($query) use ($asunto) {
             return $query->where('asunto', 'like', "%$asunto%");
         })->get();
 
