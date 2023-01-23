@@ -168,8 +168,8 @@ class ActasController extends Controller
     }
 
     public function getCompromisosPendientes(){
-        $actasCompromisos = actas::query()->with(['responsable','asistentes','compromisos'])
-            ->whereHas('compromisos', function ($query){
+        $actasCompromisos = actas::query()->with(['responsable','asistentes'])
+            ->withWhereHas('compromisos', function ($query){
             $query->whereBetween('fecha_final', [Carbon::now()->format('Y-m-d'), Carbon::now()->addDays(30)->format('Y-m-d')]);
         })->get();
         return $this->response([
