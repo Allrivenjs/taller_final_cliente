@@ -60,7 +60,7 @@ class Controller extends Response
                 'message' => 'No se ha enviado el id o autoActas'
             ], 400);
         }
-        $actas = actas::query()->where('id','LIKE', "%$id%")->orWhere('asunto','LIKE', "%$asunto%")->first();
+        $actas = actas::query()->where('id','LIKE', "%$id%")->orWhere('asunto','LIKE', "%$asunto%")->get();
         if (is_null($actas)) {
             return $this->response([
                 'message' => 'No se ha encontrado el acta'
