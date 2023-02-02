@@ -13,7 +13,7 @@ class ActasController extends Controller
 {
     public function index(): ActasController
     {
-        return $this->response(actas::query()->with(['responsable', 'creador', 'asistentes', 'compromisos'])->get());
+        return $this->response(actas::query()->with(['responsable', 'creador','asistentes', 'compromisos'])->get());
     }
     //generar funciones para una api rest
     public function store(): ActasController
