@@ -156,14 +156,15 @@ class ActasController extends Controller
                 'message' => 'Las fechas son requeridas'
             ], 400);
         }
-
         $fecha_inicio = Carbon::make($this->request->get('fecha_inicio'))->format('d-m-y');
         $fecha_final = Carbon::make($this->request->get('fecha_final'))->format('d-m-y');
         $actas = actas::query()->with(['responsable', 'creador','asistentes', 'compromisos'])->whereBetween('created_at', [$fecha_inicio, $fecha_final])->get();
 
         return $this->response([
             'message' => 'Actas por fecha',
-            'actas' => $actas
+            'actas' => $actas,
+            'fecha_inicio' => $fecha_inicio,
+            'fecha_final' => $fecha_final
         ]);
     }
 
