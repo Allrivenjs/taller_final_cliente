@@ -39,7 +39,7 @@ class ActasController extends Controller
     }
     public function show($id): ActasController
     {
-        return $this->response(actas::query()->find($id)->load(['responsable', 'creador', 'asistentes', 'compromisos']));
+        return $this->response(actas::query()->find($id)->load(['responsable', 'creador','asistentes', 'compromisos']));
     }
 
     public function attachAsistentes(): ActasController
@@ -159,7 +159,7 @@ class ActasController extends Controller
 
         $fecha_inicio = Carbon::make($this->request->get('fecha_inicio'))->format('d-m-y');
         $fecha_final = Carbon::make($this->request->get('fecha_final'))->format('d-m-y');
-        $actas = actas::query()->with(['responsable', 'creador'])->whereBetween('created_at', [$fecha_inicio, $fecha_final])->get();
+        $actas = actas::query()->with(['responsable', 'creador','asistentes', 'compromisos'])->whereBetween('created_at', [$fecha_inicio, $fecha_final])->get();
 
         return $this->response([
             'message' => 'Actas por fecha',
@@ -168,7 +168,7 @@ class ActasController extends Controller
     }
 
     public function getCompromisosPendientes(){
-        $actasCompromisos = actas::query()->with(['responsable','asistentes'])
+        $actasCompromisos = actas::query()->with(['responsable', 'creador','asistentes', 'compromisos'])
             ->withWhereHas('compromisos', function ($query){
             $query->whereBetween('fecha_final', [Carbon::now()->format('Y-m-d'), Carbon::now()->addDays(60)->format('Y-m-d')]);
         })->get();
