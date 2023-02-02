@@ -39,7 +39,7 @@ class ActasController extends Controller
     }
     public function show($id): ActasController
     {
-        return $this->response(actas::query()->find($id)->load(['responsable', 'creador']));
+        return $this->response(actas::query()->find($id)->load(['responsable', 'creador', 'asistentes', 'compromisos']));
     }
 
     public function attachAsistentes(): ActasController
